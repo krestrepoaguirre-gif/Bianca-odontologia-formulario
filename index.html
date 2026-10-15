@@ -6,6 +6,22 @@
 <title>Bianca Odontología</title>
 <!-- Meta Pixel Code -->
 <script>
+// external_id: identificador anonimo (no es dato personal) que persiste por
+// visitante en localStorage, para subir la calidad de coincidencia (Meta lo
+// recomienda como parametro adicional de Advanced Matching / CAPI). No
+// requiere formulario ni datos del usuario -- aplica a cualquier evento.
+function biancaGetOrCreateExternalId(){
+try {
+var key = 'bianca_eid';
+var eid = localStorage.getItem(key);
+if (!eid) {
+eid = (window.crypto && typeof crypto.randomUUID === 'function') ? crypto.randomUUID() : ('eid_' + Date.now() + '_' + Math.random().toString(16).slice(2));
+localStorage.setItem(key, eid);
+}
+return eid;
+} catch (e) { return undefined; }
+}
+window.__biancaExternalId = biancaGetOrCreateExternalId();
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -14,7 +30,7 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '675376958999264');
+fbq('init', '675376958999264', window.__biancaExternalId ? { external_id: window.__biancaExternalId } : {});
 fbq('set', 'autoConfig', false, '675376958999264');
 window.__fbPageViewId = 'pv_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2);
 fbq('track', 'PageView', {}, { eventID: window.__fbPageViewId });
@@ -50,7 +66,8 @@ event_name: eventName,
 event_id: eventId,
 event_source_url: window.location.href,
 fbp: getCookie('_fbp'),
-fbc: getCookie('_fbc')
+fbc: getCookie('_fbc'),
+external_id: window.__biancaExternalId
 })
 }).catch(function(){ /* si falla el servidor, el Pixel ya se disparó del lado del navegador */ });
 } catch (e) {}
@@ -931,7 +948,7 @@ statusBox.classList.add('is-visible');
 var eventId = makeEventId();
 try {
 if (typeof fbq === 'function') {
-fbq('init', PIXEL_ID, { em: email, ph: phoneDigits });
+fbq('init', PIXEL_ID, { em: email, ph: phoneDigits, external_id: window.__biancaExternalId });
 fbq('track', 'Lead', {}, { eventID: eventId });
 }
 } catch (err) {}
@@ -947,7 +964,8 @@ event_source_url: window.location.href,
 fbp: getCookie('_fbp'),
 fbc: getCookie('_fbc'),
 em: email,
-ph: phoneDigits
+ph: phoneDigits,
+external_id: window.__biancaExternalId
 })
 }).catch(function(){});
 } catch (err) {}
