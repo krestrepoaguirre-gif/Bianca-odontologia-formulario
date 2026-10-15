@@ -52,7 +52,7 @@ exports.handler = async function (event) {
   } catch (e) {
     return { statusCode: 400, body: JSON.stringify({ error: 'JSON invalido en el body.' }) };
   }
-  const { event_name, event_id, event_source_url, fbp, fbc, em, ph } = payload;
+  const { event_name, event_id, event_source_url, fbp, fbc, em, ph, external_id } = payload;
   if (!event_name || !event_id) {
     return { statusCode: 400, body: JSON.stringify({ error: 'event_name y event_id son obligatorios.' }) };
   }
@@ -67,6 +67,7 @@ exports.handler = async function (event) {
   if (userAgent) userData.client_user_agent = userAgent;
   if (fbp) userData.fbp = fbp;
   if (fbc) userData.fbc = fbc;
+  if (external_id) userData.external_id = external_id;
   const hashedEmail = hashEmail(em);
   const hashedPhone = hashPhone(ph);
   if (hashedEmail) userData.em = hashedEmail;
