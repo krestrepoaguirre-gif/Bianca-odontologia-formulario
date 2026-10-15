@@ -965,6 +965,23 @@ body: body.toString()
 }).catch(function(){});
 } catch (err) {}
 
+// Copia de respaldo del lead en una hoja de cálculo de Google (vía Google
+// Forms, en segundo plano). mode:'no-cors' evita que el navegador bloquee
+// la petición por CORS; con eso no podemos leer la respuesta, pero no la
+// necesitamos — es un registro de respaldo, no la vía principal del lead.
+try {
+var gBody = new URLSearchParams();
+gBody.append('entry.1235935622', name);
+gBody.append('entry.1101830765', phoneInput.value.trim());
+gBody.append('entry.614653816', email);
+fetch('https://docs.google.com/forms/d/e/1FAIpQLSfTECUyixrO8dt97ByJdD3dCf_nJONJc2t-1-bsy3YA--ObCA/formResponse', {
+method: 'POST',
+mode: 'no-cors',
+headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+body: gBody.toString()
+}).catch(function(){});
+} catch (err) {}
+
 setTimeout(function(){
 closeBiancaForm();
 modalForm.reset();
